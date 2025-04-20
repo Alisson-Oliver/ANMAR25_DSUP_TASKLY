@@ -26,6 +26,14 @@ class TaskService {
       throw new Error("task not found");
     }
   }
+
+  async delete(id: number) {
+    const result = await TaskRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new Error("task not found");
+    }
+  }
 }
 
 export default new TaskService();
