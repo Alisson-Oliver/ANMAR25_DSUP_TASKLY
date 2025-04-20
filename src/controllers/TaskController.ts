@@ -49,6 +49,25 @@ class TaskController {
       }
     }
   }
+
+  async update(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const idNumber = Number(id);
+      const updateData = req.body;
+
+      if (!id || isNaN(Number(id))) {
+        res.status(400).json({ error: "id is required" });
+      }
+
+      await TaskService.update(updateData, idNumber);
+      res.status(204).send();
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(500).json({ error: error.message });
+      }
+    }
+  }
 }
 
 export default new TaskController();
