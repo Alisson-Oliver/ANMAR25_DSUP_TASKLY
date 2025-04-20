@@ -4,6 +4,7 @@ import { validateTask } from "../middlewares/validation.middleware";
 
 const router = Router();
 
+router.get("/tasks/status/:status", TaskController.findByStatus);
 router.get("/tasks/:id", TaskController.findById);
 router.post("/tasks", validateTask, TaskController.create);
 
