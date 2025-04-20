@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import TaskService from "../services/TaskService";
-import { TaskStatus } from "../entities/Task";
+import { TaskPriority, TaskStatus } from "../entities/Task";
 
 class TaskController {
   async create(req: Request, res: Response): Promise<void> {
@@ -12,6 +12,22 @@ class TaskController {
         res.status(500).json({ error: error.message });
       }
     }
+  }
+
+  async findAll(req: Request, res: Response): Promise<void> {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit);
+
+    const filters = {
+      title: req.query.title as string,
+      status: req.query.status as TaskStatus,
+      priority: req.query.priority as TaskPriority,
+      category: req.query.category as string,
+    };
+
+    const result = await TaskService.findAll(page, limit, filters);
+
+    res.json(result);
   }
 
   async findById(req: Request, res: Response) {
