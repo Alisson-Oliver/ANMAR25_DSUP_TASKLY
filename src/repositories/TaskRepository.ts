@@ -1,5 +1,6 @@
+import { FindOperator } from "typeorm";
 import { AppDataSource } from "../config/data-source";
-import { Task } from "../entities/Task";
+import { Task, TaskStatus } from "../entities/Task";
 
 class TaskRepository {
   private repository = AppDataSource.getRepository(Task);
@@ -11,6 +12,10 @@ class TaskRepository {
 
   async findById(id: number) {
     return await this.repository.findOne({ where: { id } });
+  }
+
+  async findByStatus(status: TaskStatus) {
+    return await this.repository.find({ where: { status } });
   }
 }
 
