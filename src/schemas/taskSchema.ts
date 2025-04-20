@@ -13,11 +13,13 @@ export const taskSchema = z.object({
     .max(250, { message: "'description' must have at most 250 characters" })
     .optional(),
 
-  status: z.nativeEnum(TaskStatus, {
-    required_error: "'status' is required",
-    invalid_type_error:
-      "'status' must be one of: 'todo', 'in_progress', 'done'",
-  }),
+  status: z
+    .nativeEnum(TaskStatus, {
+      required_error: "'status' is required",
+      invalid_type_error:
+        "'status' must be one of: 'todo', 'in_progress', 'done'",
+    })
+    .optional(),
 
   priority: z
     .nativeEnum(TaskPriority, {
