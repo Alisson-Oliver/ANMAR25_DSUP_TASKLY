@@ -9,7 +9,8 @@ export function validateTask(req: Request, res: Response, next: NextFunction) {
     const errosDetails = validation.error.errors.map(
       (detail) => detail.message,
     );
-    return res.status(400).json({ erros: errosDetails });
+    res.status(400).json({ erros: errosDetails });
+    return;
   }
 
   next();
@@ -22,7 +23,8 @@ export function validateNote(req: Request, res: Response, next: NextFunction) {
     const errosDetails = validation.error.errors.map(
       (detail) => detail.message,
     );
-    return res.status(400).json({ errors: errosDetails });
+    res.status(400).json({ errors: errosDetails });
+    return;
   }
 
   next();
