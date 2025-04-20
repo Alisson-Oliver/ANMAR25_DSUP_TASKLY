@@ -12,6 +12,24 @@ class TaskController {
       }
     }
   }
+
+  async findById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const idNumber = Number(id);
+
+      if (!id || isNaN(Number(id))) {
+        res.status(400).json({ error: "id is required" });
+      }
+
+      const task = await TaskService.findById(idNumber);
+      res.status(200).json({ task });
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(500).json({ error: error.message });
+      }
+    }
+  }
 }
 
 export default new TaskController();
