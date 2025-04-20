@@ -1,5 +1,5 @@
 import TaskRepository from "../repositories/TaskRepository";
-import { Task } from "../entities/Task";
+import { Task, TaskStatus } from "../entities/Task";
 
 class TaskService {
   async create(date: Partial<Task>) {
@@ -13,6 +13,10 @@ class TaskService {
     }
 
     return task;
+  }
+
+  async findByStatus(status: TaskStatus) {
+    return await TaskRepository.findByStatus(status);
   }
 }
 
