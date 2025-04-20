@@ -8,6 +8,10 @@ class TaskRepository {
     const note = this.repository.create(noteData);
     return await this.repository.save(note);
   }
+
+  async findById(id: number) {
+    return await this.repository.findOne({ where: { id } });
+  }
 }
 
 export default new TaskRepository();
