@@ -17,6 +17,10 @@ class TaskRepository {
   async findByStatus(status: TaskStatus) {
     return await this.repository.find({ where: { status } });
   }
+
+  async update(newData: Partial<Task>, id: number) {
+    return await this.repository.update(id, newData);
+  }
 }
 
 export default new TaskRepository();
