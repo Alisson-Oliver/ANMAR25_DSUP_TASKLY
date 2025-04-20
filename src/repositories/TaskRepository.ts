@@ -1,13 +1,52 @@
-import { FindOperator } from "typeorm";
+import { ILike, Repository } from "typeorm";
 import { AppDataSource } from "../config/data-source";
-import { Task, TaskStatus } from "../entities/Task";
+import { Task, TaskPriority, TaskStatus } from "../entities/Task";
 
 class TaskRepository {
-  private repository = AppDataSource.getRepository(Task);
+  private repository: Repository<Task>;
+
+  constructor() {
+    this.repository = AppDataSource.getRepository(Task);
+  }
 
   async create(noteData: Partial<Task>) {
     const note = this.repository.create(noteData);
     return await this.repository.save(note);
+  }
+
+  async findAll(
+    page: number,
+    limit: number,
+    filters: {
+      title?: string;
+      status?: TaskStatus;
+      priority?: TaskPriority;
+      category?: string;
+    },
+  ) {
+    const where: any = {};
+
+    if (filters.title) {
+      where.title = ILike(`%${filters.title}%`);
+    }
+    if (filters.status) {
+      where.status = filters.status;
+    }
+    if (filters.priority) {
+      where.priority = filters.priority;
+    }
+    if (filters.category) {
+      where.category = ILike(`%${filters.category}%`);
+    }
+
+    const [tasks, count] = await this.repository.findAndCount({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { created_at: "DESC" },
+    });
+
+    return { tasks, count };
   }
 
   async findById(id: number) {
