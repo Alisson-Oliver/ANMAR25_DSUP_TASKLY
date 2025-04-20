@@ -21,6 +21,10 @@ class TaskRepository {
   async update(newData: Partial<Task>, id: number) {
     return await this.repository.update(id, newData);
   }
+
+  async delete(id: number) {
+    return await this.repository.delete(id);
+  }
 }
 
 export default new TaskRepository();
