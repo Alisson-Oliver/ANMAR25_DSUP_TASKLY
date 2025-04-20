@@ -18,6 +18,14 @@ class TaskService {
   async findByStatus(status: TaskStatus) {
     return await TaskRepository.findByStatus(status);
   }
+
+  async update(newData: Partial<Task>, id: number) {
+    const result = await TaskRepository.update(newData, id);
+
+    if (result.affected === 0) {
+      throw new Error("task not found");
+    }
+  }
 }
 
 export default new TaskService();
