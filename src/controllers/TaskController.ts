@@ -24,7 +24,7 @@ class TaskController {
       }
 
       const task = await TaskService.findById(idNumber);
-      res.status(200).json({ task });
+      res.status(200).json(task);
     } catch (error) {
       if (error instanceof Error) {
         res.status(500).json({ error: error.message });
@@ -61,6 +61,24 @@ class TaskController {
       }
 
       await TaskService.update(updateData, idNumber);
+      res.status(204).send();
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(500).json({ error: error.message });
+      }
+    }
+  }
+
+  async delete(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const idNumber = Number(id);
+
+      if (!id || isNaN(Number(id))) {
+        res.status(400).json({ error: "id is required" });
+      }
+
+      await TaskService.delete(idNumber);
       res.status(204).send();
     } catch (error) {
       if (error instanceof Error) {
