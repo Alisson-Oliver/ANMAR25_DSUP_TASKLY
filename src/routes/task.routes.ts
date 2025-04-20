@@ -11,5 +11,6 @@ router.get("/tasks/status/:status", TaskController.findByStatus);
 router.get("/tasks/:id", TaskController.findById);
 router.post("/tasks", validateTaskAdd, TaskController.create);
 router.put("/tasks/:id", validateTaskUpdate, TaskController.update);
+router.delete("/tasks/:id", TaskController.delete);
 
 export default router;
