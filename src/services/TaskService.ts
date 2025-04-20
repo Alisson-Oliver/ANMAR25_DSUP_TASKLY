@@ -1,9 +1,16 @@
 import TaskRepository from "../repositories/TaskRepository";
-import { Task, TaskStatus } from "../entities/Task";
+import { Task, TaskPriority, TaskStatus } from "../entities/Task";
+
+interface FilterParams {
+  title?: string;
+  status?: TaskStatus;
+  priority?: TaskPriority;
+  category?: string;
+}
 
 class TaskService {
-  async create(date: Partial<Task>) {
-    return await TaskRepository.create(date);
+  async create(data: Partial<Task>) {
+    return await TaskRepository.create(data);
   }
 
   async findById(id: number) {
@@ -11,8 +18,27 @@ class TaskService {
     if (!task) {
       throw new Error("task not found");
     }
-
     return task;
+  }
+
+  async findAll(page: number, limit: number, filters: FilterParams) {
+    if (!page || page < 1) {
+      page = 1;
+    }
+
+    if (!limit) {
+      limit = 5;
+    } else if (limit > 10) {
+      limit = 10;
+    }
+
+    const { tasks, count } = await TaskRepository.findAll(page, limit, filters);
+
+    return {
+      count,
+      pages: Math.ceil(count / limit),
+      data: tasks,
+    };
   }
 
   async findByStatus(status: TaskStatus) {
