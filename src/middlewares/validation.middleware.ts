@@ -1,9 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { taskSchema } from "../schemas/taskSchema";
-import { noteSchema } from "../schemas/noteSchema";
+import { taskSchemaAdd, taskSchemaUpdate } from "../schemas/taskSchema";
+import { noteSchemaAdd } from "../schemas/noteSchema";
 
-export function validateTask(req: Request, res: Response, next: NextFunction) {
-  const validation = taskSchema.safeParse(req.body);
+export function validateTaskAdd(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const validation = taskSchemaAdd.safeParse(req.body);
 
   if (!validation.success) {
     const errosDetails = validation.error.errors.map(
@@ -16,8 +20,36 @@ export function validateTask(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
-export function validateNote(req: Request, res: Response, next: NextFunction) {
-  const validation = noteSchema.safeParse(req.body);
+export function validateNoteAdd(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const validation = noteSchemaAdd.safeParse(req.body);
+
+  if (!validation.success) {
+    const errosDetails = validation.error.errors.map(
+      (detail) => detail.message,
+    );
+    res.status(400).json({ errors: errosDetails });
+    return;
+  }
+
+  next();
+}
+
+export function validateTaskUpdate(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  if (req.body.id) {
+    delete req.body.id;
+  }
+
+  console.log(req.body);
+
+  const validation = taskSchemaUpdate.safeParse(req.body);
 
   if (!validation.success) {
     const errosDetails = validation.error.errors.map(
