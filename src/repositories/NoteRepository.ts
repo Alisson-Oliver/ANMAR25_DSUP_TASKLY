@@ -28,6 +28,10 @@ class NoteRepository {
     const note = this.repository.create(noteData);
     return await this.repository.save(note);
   }
+
+  async update(newData: Partial<Note>, id: number) {
+    return await this.repository.update(id, newData);
+  }
 }
 
 export default new NoteRepository();
