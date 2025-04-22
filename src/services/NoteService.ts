@@ -44,6 +44,14 @@ class NoteService {
       throw new Error("note not found");
     }
   }
+
+  async delete(id: number) {
+    const result = await NoteRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new Error("note not found");
+    }
+  }
 }
 
 export default new NoteService();
