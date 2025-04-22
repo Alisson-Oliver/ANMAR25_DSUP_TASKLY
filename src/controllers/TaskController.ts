@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import TaskService from "../services/TaskService";
-import { TaskPriority, TaskStatus } from "../entities/Task";
+import TaskService from "../services/TaskService.js";
+import { TaskPriority, TaskStatus } from "../entities/Task.js";
 
 class TaskController {
   async create(req: Request, res: Response): Promise<void> {
