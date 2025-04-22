@@ -36,6 +36,14 @@ class NoteService {
 
     return await NoteRepository.create(data);
   }
+
+  async update(newData: Partial<Note>, id: number) {
+    const result = await NoteRepository.update(newData, id);
+
+    if (result.affected === 0) {
+      throw new Error("note not found");
+    }
+  }
 }
 
 export default new NoteService();
