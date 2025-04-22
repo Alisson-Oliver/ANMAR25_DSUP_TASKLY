@@ -9,6 +9,14 @@ class NoteRepository {
     this.repository = AppDataSource.getRepository(Note);
   }
 
+  async getAll() {
+    return await this.repository.find();
+  }
+
+  async getByIdTask(id: number) {
+    return await this.repository.find({ where: { task: { id } } });
+  }
+
   async create(noteData: Partial<Note>) {
     const note = this.repository.create(noteData);
     return await this.repository.save(note);
