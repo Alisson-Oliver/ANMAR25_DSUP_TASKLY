@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import "dotenv/config";
 import { DataSource } from "typeorm";
-import { Note } from "../entities/Note";
-import { Task } from "../entities/Task";
+import { Note } from "../entities/Note.js";
+import { Task } from "../entities/Task.js";
 
 const PORT = process.env.DB_PORT ? Number(process.env.DB_PORT) : undefined;
 
@@ -16,5 +16,4 @@ export const AppDataSource = new DataSource({
   password: DB_PASSWORD,
   database: DB_NAME,
   entities: [Task, Note],
-  synchronize: true,
 });
