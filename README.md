@@ -28,11 +28,11 @@ This API was developed using **Node.js,** **TypeScript**, and **TypeORM** to man
 
 2. **Run Docker Compose**:
 
-The project includes a docker-compose.yml file to set up PostgreSQL in a Docker container. To start the database container, run:
+   The project includes a docker-compose.yml file to set up PostgreSQL in a Docker container. To start the database container, run:
 
-```bash
-docker-compose up -d
-```
+   ```bash
+   docker-compose up -d
+   ```
 
 This command will start PostgreSQL in the background and expose the database on port `5433`.
 
@@ -100,17 +100,20 @@ This will shut down the PostgreSQL container.
 
 - **Request Body**
 
-```json
-{
-  "title": "task title",
-  "status": "todo", // Enum: todo, in_progress, done
-  "description": "task description",
-  "priority": "low", // Enum: low, medium, high
-  "category": "task category"
-}
-```
+  ```json
+  {
+    "title": "task title",
+    "status": "todo",
+    "description": "task description",
+    "priority": "low",
+    "category": "task category"
+  }
+  ```
 
-> Only the "title" is required
+  The **status** field receives values ​​of the Enum type: **todo**, **in_progress**, **done**
+  The **priority** field receives values of the Enum type: **low**, **medium**, **high**
+
+  > Only the "title" is required
 
 - **Success Response**
 
@@ -163,6 +166,7 @@ This will shut down the PostgreSQL container.
 | ---------- | ------- | ----------------------------------------------------------------------- |
 | `status`   | `todo`  | Returns tasks with the specified status (`todo`, `in_progress`, `done`) |
 | `priority` | `high`  | Returns tasks with the specified priority (`low`, `medium`, `high`)     |
+| `title`    | `Task`  | Returns tasks with a part of the title                                  |
 | `category` | `Work`  | Returns tasks in the specified category (Ex: `Work`, `Personal`, etc.)  |
 | `page`     | `4`     | Defines the result page (default = 1 if not sent or invalid)            |
 | `limit`    | `2`     | Number of items per page (default = 5, min = 1, max = 10)               |
@@ -294,11 +298,11 @@ GET /api/v1/tasks?status=todo&page=2&limit=2
     }
     ```
   - **404 Not Found**: If the task is not found.
-  ```json
-  {
-    "error": "task not found"
-  }
-  ```
+    ```json
+    {
+      "error": "task not found"
+    }
+    ```
   - **500 Internal Server Error**: In case of server error.
     ```json
       {
@@ -312,17 +316,20 @@ GET /api/v1/tasks?status=todo&page=2&limit=2
 
 - **Request Body**
 
-```json
-{
-  "title": "task title",
-  "status": "todo", // Enum: todo, in_progress, done
-  "description": "task description",
-  "priority": "low", // Enum: low, medium, high
-  "category": "task category"
-}
-```
+  ```json
+  {
+    "title": "task title",
+    "status": "todo",
+    "description": "task description",
+    "priority": "low",
+    "category": "task category"
+  }
+  ```
 
-> All fields are optional
+  The **status** field receives values ​​of the Enum type: **todo**, **in_progress**, **done**
+  The **priority** field receives values of the Enum type: **low**, **medium**, **high**
+
+  > All fields are optional
 
 - **Success Response**
 
@@ -386,13 +393,13 @@ GET /api/v1/tasks?status=todo&page=2&limit=2
 
 - **Request Body**
 
-```json
-{
-  "content": "Note content"
-}
-```
+  ```json
+  {
+    "content": "Note content"
+  }
+  ```
 
-> The "content" field is required
+  > The "content" field is required
 
 - **Success Response**
 
@@ -523,11 +530,13 @@ GET /api/v1/tasks?status=todo&page=2&limit=2
 
 - **Request Body**
 
-```json
-{
-  "content": "New note content"
-}
-```
+  ```json
+  {
+    "content": "New note content"
+  }
+  ```
+
+  > The "content" field is optional
 
 - **Success Response**
 
