@@ -16,6 +16,14 @@ class NoteService {
     return await NoteRepository.getByIdTask(taskId);
   }
 
+  async findById(id: number) {
+    const note = await NoteRepository.getByid(id);
+    if (!note) {
+      throw new Error("note not found");
+    }
+    return note;
+  }
+
   async create(data: Note) {
     const taskId = data.task.id;
     const existingTask = await TaskRepository.findById(taskId);
