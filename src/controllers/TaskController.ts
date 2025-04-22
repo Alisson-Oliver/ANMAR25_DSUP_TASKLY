@@ -58,7 +58,7 @@ class TaskController {
 
       const tasks = await TaskService.findByStatus(status as TaskStatus);
 
-      res.json({ data: tasks });
+      res.json({ data: { tasks } });
     } catch (error) {
       if (error instanceof Error) {
         res.status(500).json({ error: error.message });

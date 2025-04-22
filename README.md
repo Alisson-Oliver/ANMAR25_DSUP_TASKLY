@@ -22,7 +22,8 @@ This API was developed using **Node.js,** **TypeScript**, and **TypeORM** to man
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/Alisson-Oliver/ANMAR25_DSUP_TASKLY
+   git clone https://github.com/Alisson-Oliver/ANMAR25_DSUP_TASKLY.git
+   cd ANMAR25_DSUP_TASKLY
    ```
 
 2. **Run Docker Compose**:
@@ -93,30 +94,496 @@ This will shut down the PostgreSQL container.
 
 ## 🌐 API Endpoints
 
-**1.1 - Tasks Route**
+### **1.1 - Tasks Route**
 
-```shell
-POST /tasks - Create a new task card
-GET /tasks - List all task cards
-GET /tasks/:id - Get a specific task card
-GET /tasks/status/:status - Get task cards by status
-PUT /tasks/:id - Update a task card
-DELETE /tasks/:id - Delete a task card
+#### `POST /tasks - Create a new task card`
 
+- **Request Body**
+
+```json
+{
+  "title": "task title",
+  "status": "todo", // Enum: todo, in_progress, done
+  "description": "task description",
+  "priority": "low", // Enum: low, medium, high
+  "category": "task category"
+}
 ```
 
-**1.2 - Notes Route**
+> Only the "title" is required
 
-```shell
-POST /tasks/:taskId/notes - Create a new note
-GET /tasks/:taskId/notes - List all notes for a task
-GET /notes/:id - Get a specific note
-PUT /notes/:id - Update a note
-DELETE /notes/:id - Delete a note
+- **Success Response**
 
+  - Status: `201 Created`
+  - Body:
+    ```json
+    {
+      "id": 1,
+      "title": "task title",
+      "description": "task description",
+      "status": "todo",
+      "priority": "low",
+      "category": "task category",
+      "created_at": "2025-04-22T21:55:08.202Z",
+      "updated_at": "2025-04-22T21:55:08.202Z"
+    }
+    ```
+
+- **Error Responses**
+
+  - **400 Bad Request**: If mandatory data is not sent or is invalid
+
+    ```json
+    {
+      "errors": [
+        "'title' is required",
+        "'description' cannot be empty",
+        "Invalid enum value. Expected 'todo' | 'in_progress' | 'done', received 'dsadsa'",
+        "Invalid enum value. Expected 'low' | 'medium' | 'high', received 'dsads'",
+        "'category' cannot be empty"
+      ]
+    }
+    ```
+
+    - **500 Internal Server Error**: In case of server error.
+
+    ```json
+      {
+         "errors": [
+            "message": "an internal server error occurred"
+         ]
+      }
+    ```
+
+#### `GET /tasks - List all task cards`
+
+#### Query Parameters (all optional):
+
+| Param      | Example | Description                                                             |
+| ---------- | ------- | ----------------------------------------------------------------------- |
+| `status`   | `todo`  | Returns tasks with the specified status (`todo`, `in_progress`, `done`) |
+| `priority` | `high`  | Returns tasks with the specified priority (`low`, `medium`, `high`)     |
+| `category` | `Work`  | Returns tasks in the specified category (Ex: `Work`, `Personal`, etc.)  |
+| `page`     | `4`     | Defines the result page (default = 1 if not sent or invalid)            |
+| `limit`    | `2`     | Number of items per page (default = 5, min = 1, max = 10)               |
+
+#### Example Request
+
+```http
+GET /api/v1/tasks?status=todo&page=2&limit=2
 ```
 
-_In development..._
+- **Success Response**
+
+  - Status: `200 OK`
+  - Body:
+    ```json
+    {
+      "count": 9,
+      "pages": 5,
+      "data": [
+        {
+          "id": 19,
+          "title": "task title 2",
+          "description": "task description 2",
+          "status": "todo",
+          "priority": "high",
+          "category": "task category 2",
+          "created_at": "2025-04-22T21:55:08.202Z",
+          "updated_at": "2025-04-22T21:55:08.202Z"
+        },
+        {
+          "id": 18,
+          "title": "task title 1",
+          "description": "task description 1",
+          "status": "todo",
+          "priority": "low",
+          "category": "task category 1",
+          "created_at": "2025-04-22T21:55:08.202Z",
+          "updated_at": "2025-04-22T21:55:08.202Z"
+        }
+      ]
+    }
+    ```
+
+- **Error Response**
+  - **500 Internal Server Error**: In case of error when listing tasks.
+    ```json
+      {
+         "errors": [
+            "message": "an internal server error occurred"
+         ]
+      }
+    ```
+
+#### `GET /tasks/status/:status - Search cards by status`
+
+- **Success Response**
+
+  - Status: `200 OK`
+  - Body:
+    ```json
+    {
+      "data": {
+        "tasks": [
+          {
+            "id": 4,
+            "title": "Study Python",
+            "description": "Studying python for tomorrow's test",
+            "status": "todo",
+            "priority": null,
+            "category": "Studies",
+            "created_at": "2025-04-22T20:16:16.843Z",
+            "updated_at": "2025-04-22T20:16:16.843Z"
+          },
+          {
+            "id": 5,
+            "title": "Buy school supplies",
+            "description": "Buy notebooks and pens",
+            "status": "todo",
+            "priority": "low",
+            "category": "null",
+            "created_at": "2025-04-22T20:17:12.168Z",
+            "updated_at": "2025-04-22T20:17:12.168Z"
+          }
+        ]
+      }
+    }
+    ```
+
+- **Error Responses**
+  - **400 Bad Request**: if the status is invalid.
+    ```json
+    {
+      "error": "invalid status"
+    }
+    ```
+  - **500 Internal Server Error**: In case of server error.
+    ```json
+      {
+         "errors": [
+            "message": "an internal server error occurred"
+         ]
+      }
+    ```
+
+#### `GET /tasks/:id - Get a specific task card`
+
+- **Success Response**
+
+  - Status: `200 OK`
+  - Body:
+    ```json
+    {
+      "id": 4,
+      "title": "Study Python",
+      "description": "Studying python for tomorrow's test",
+      "status": "todo",
+      "priority": null,
+      "category": "Studies",
+      "created_at": "2025-04-22T20:16:16.843Z",
+      "updated_at": "2025-04-22T20:16:16.843Z"
+    }
+    ```
+
+- **Error Responses**
+  - **400 Bad Request**: if the ID is invalid or not sent.
+    ```json
+    {
+      "error": "id is required"
+    }
+    ```
+  - **404 Not Found**: If the task is not found.
+  ```json
+  {
+    "error": "task not found"
+  }
+  ```
+  - **500 Internal Server Error**: In case of server error.
+    ```json
+      {
+         "errors": [
+            "message": "an internal server error occurred"
+         ]
+      }
+    ```
+
+#### `PUT /tasks/:id - Update a task card`
+
+- **Request Body**
+
+```json
+{
+  "title": "task title",
+  "status": "todo", // Enum: todo, in_progress, done
+  "description": "task description",
+  "priority": "low", // Enum: low, medium, high
+  "category": "task category"
+}
+```
+
+> All fields are optional
+
+- **Success Response**
+
+  - Status: `204 No Content`
+  - Body: No content returned.
+
+- **Error Responses**
+  - **400 Bad Request**: if the ID is invalid or not sent.
+    ```json
+    {
+      "error": "id is required"
+    }
+    ```
+  - **404 Not Found**: If the task is not found.
+    ```json
+    {
+      "error": "task not found"
+    }
+    ```
+  - **500 Internal Server Error**: In case of server error.
+    ```json
+      {
+         "errors": [
+            "message": "an internal server error occurred"
+         ]
+      }
+    ```
+
+#### `DELETE /tasks/:id - Delete a task card`
+
+- **Success Response**
+
+  - Status: `204 No Content`
+  - Body: No content returned.
+
+- **Error Responses**
+  - **400 Bad Request**: if the ID is invalid or not sent.
+    ```json
+    {
+      "error": "id is required"
+    }
+    ```
+  - **404 Not Found**: If the task is not found.
+    ```json
+    {
+      "error": "task not found"
+    }
+    ```
+  - **500 Internal Server Error**: In case of server error.
+    ```json
+      {
+         "errors": [
+            "message": "an internal server error occurred"
+         ]
+      }
+    ```
+
+### **1.2 - Notes Route**
+
+#### `POST /tasks/:taskId/notes - Create a new note for a task`
+
+- **Request Body**
+
+```json
+{
+  "content": "Note content"
+}
+```
+
+> The "content" field is required
+
+- **Success Response**
+
+  - Status: `201 Created`
+  - Body:
+    ```json
+    {
+      "id": 1,
+      "taskId": 1,
+      "content": "Note content"
+    }
+    ```
+
+- **Error Responses**
+  - **400 Bad Request**: If the task ID is not sent or is invalid.
+    ```json
+    {
+      "error": "id is required"
+    }
+    ```
+  - **404 Not Found**: If the task is not found.
+    ```json
+    {
+      "error": "task not found"
+    }
+    ```
+  - **500 Internal Server Error**: In case of server error.
+    ```json
+    {
+         "errors": [
+            "message": "an internal server error occurred"
+         ]
+      }
+    ```
+
+#### `GET /tasks/:taskId/notes - List all notes for a task`
+
+- **Success Response**
+
+  - Status: `200 OK`
+  - Body:
+    ```json
+      {
+         "data": {
+            "notes": [
+                  {
+                     "id": 15,
+                     "content": "Stretching before and after training",
+                     "created_at": "2025-04-22T20:32:35.233Z",
+                     "updated_at": "2025-04-22T20:32:35.233Z"
+                  },
+                  ...
+               ]
+         }
+      }
+    ```
+
+- **Error Responses**
+  - **400 Bad Request**: If the task ID is not sent or is invalid.
+    ```json
+    {
+      "error": "id is required"
+    }
+    ```
+  - **404 Not Found**: If the task is not found.
+    ```json
+    {
+      "error": "task not found"
+    }
+    ```
+  - **500 Internal Server Error**: In case of server error.
+    ```json
+    {
+         "errors": [
+            "message": "an internal server error occurred"
+         ]
+      }
+    ```
+
+#### `GET /notes/:id - Get a specific note`
+
+- **Success Response**
+
+  - Status: `200 OK`
+  - Body:
+    ```json
+    {
+      "id": 12,
+      "content": "Resolve document problems",
+      "created_at": "2025-04-22T20:32:13.309Z",
+      "updated_at": "2025-04-22T20:32:13.309Z",
+      "task": {
+        "id": 8,
+        "title": "Organize internship documents",
+        "description": null,
+        "status": "done",
+        "priority": "high",
+        "category": null,
+        "created_at": "2025-04-22T20:18:24.171Z",
+        "updated_at": "2025-04-22T20:26:38.426Z"
+      }
+    }
+    ```
+
+- **Error Responses**
+  - **400 Bad Request**: If the task ID is not sent or is invalid.
+    ```json
+    {
+      "error": "id is required"
+    }
+    ```
+  - **404 Not Found**: If the task is not found.
+    ```json
+    {
+      "error": "task not found"
+    }
+    ```
+  - **500 Internal Server Error**: In case of server error.
+    ```json
+    {
+         "errors": [
+            "message": "an internal server error occurred"
+         ]
+      }
+    ```
+
+#### `PUT /notes/:id - Update a note`
+
+- **Request Body**
+
+```json
+{
+  "content": "New note content"
+}
+```
+
+- **Success Response**
+
+  - Status: `204 No Content`
+  - Body: No content returned.
+
+- **Error Responses**
+  - **400 Bad Request**: If the task ID is not sent or is invalid.
+    ```json
+    {
+      "error": "id is required"
+    }
+    ```
+  - **404 Not Found**: If the task is not found.
+    ```json
+    {
+      "error": "task not found"
+    }
+    ```
+  - **500 Internal Server Error**: In case of server error.
+    ```json
+    {
+         "errors": [
+            "message": "an internal server error occurred"
+         ]
+      }
+    ```
+
+#### `DELETE /notes/:id - Delete a note`
+
+- **Success Response**
+
+  - Status: `204 No Content`
+  - Body: No content returned.
+
+- **Error Responses**
+  - **400 Bad Request**: If the task ID is not sent or is invalid.
+    ```json
+    {
+      "error": "id is required"
+    }
+    ```
+  - **404 Not Found**: If the task is not found.
+    ```json
+    {
+      "error": "task not found"
+    }
+    ```
+  - **500 Internal Server Error**: In case of server error.
+    ```json
+    {
+         "errors": [
+            "message": "an internal server error occurred"
+         ]
+      }
+    ```
 
 ## 🤝 Contribution
 
