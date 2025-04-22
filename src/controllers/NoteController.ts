@@ -81,6 +81,28 @@ class NoteController {
       }
     }
   }
+
+  async update(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const idNumber = Number(id);
+      const updateData = req.body;
+
+      if (!id || isNaN(Number(id))) {
+        res.status(400).json({ error: "id is required" });
+      }
+
+      await NoteService.update(updateData, idNumber);
+      res.status(204).json();
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === "note not found") {
+          res.status(404).json({ error: error.message });
+        }
+        res.status(500).json({ error: error.message });
+      }
+    }
+  }
 }
 
 export default new NoteController();
