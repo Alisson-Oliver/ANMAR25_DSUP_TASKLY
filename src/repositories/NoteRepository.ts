@@ -13,6 +13,13 @@ class NoteRepository {
     return await this.repository.find();
   }
 
+  async getByid(id: number) {
+    return await this.repository.findOne({
+      where: { id },
+      relations: ["task"],
+    });
+  }
+
   async getByIdTask(id: number) {
     return await this.repository.find({ where: { task: { id } } });
   }
