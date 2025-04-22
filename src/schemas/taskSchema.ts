@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { TaskPriority, TaskStatus } from "../entities/Task";
+import { TaskPriority, TaskStatus } from "../entities/Task.js";
 
 export const taskSchemaAdd = z.object({
   title: z

@@ -1,5 +1,5 @@
-import TaskRepository from "../repositories/TaskRepository";
-import { Task, TaskPriority, TaskStatus } from "../entities/Task";
+import TaskRepository from "../repositories/TaskRepository.js";
+import { Task, TaskPriority, TaskStatus } from "../entities/Task.js";
 
 interface FilterParams {
   title?: string;

@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
 
-import taskRoutes from "../routes/task.routes";
-import noteRoutes from "../routes/note.routes";
-import errorHandler from "../middlewares/error-handler.middleware";
+import taskRoutes from "../routes/task.routes.js";
+import noteRoutes from "../routes/note.routes.js";
+import errorHandler from "../middlewares/error-handler.middleware.js";
 
 const app = express();
 

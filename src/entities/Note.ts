@@ -7,7 +7,7 @@ import {
   ManyToOne,
 } from "typeorm";
 
-import { Task } from "./Task";
+import { Task } from "./Task.js";
 
 @Entity("notes")
 export class Note {

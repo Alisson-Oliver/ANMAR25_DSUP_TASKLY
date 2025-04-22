@@ -1,6 +1,6 @@
 import { ILike, Repository } from "typeorm";
-import { AppDataSource } from "../config/data-source";
-import { Task, TaskPriority, TaskStatus } from "../entities/Task";
+import { AppDataSource } from "../config/data-source.js";
+import { Task, TaskPriority, TaskStatus } from "../entities/Task.js";
 
 class TaskRepository {
   private repository: Repository<Task>;

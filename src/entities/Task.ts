@@ -19,7 +19,7 @@ export enum TaskPriority {
   HIGH = "high",
 }
 
-import { Note } from "./Note";
+import { Note } from "./Note.js";
 @Entity("tasks")
 export class Task {
   @PrimaryGeneratedColumn()
