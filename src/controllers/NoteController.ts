@@ -35,6 +35,28 @@ class NoteController {
     }
   }
 
+  async findById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const idNumber = Number(id);
+
+      if (!idNumber || isNaN(Number(idNumber))) {
+        res.status(400).json({ error: "id is required" });
+        return;
+      }
+
+      const note = await NoteService.findById(idNumber);
+      res.status(200).json(note);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === "note not found") {
+          res.status(404).json({ error: error.message });
+        }
+        res.status(500).json({ error: error.message });
+      }
+    }
+  }
+
   async create(req: Request, res: Response): Promise<void> {
     try {
       const data = req.body;
