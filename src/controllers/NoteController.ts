@@ -103,6 +103,24 @@ class NoteController {
       }
     }
   }
+
+  async delete(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const idNumber = Number(id);
+
+      if (!id || isNaN(Number(id))) {
+        res.status(400).json({ error: "id is required" });
+      }
+
+      await NoteService.delete(idNumber);
+      res.status(204).json();
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(500).json({ error: error.message });
+      }
+    }
+  }
 }
 
 export default new NoteController();
